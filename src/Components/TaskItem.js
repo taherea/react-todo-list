@@ -1,20 +1,24 @@
 import React from "react";
 
-const TaskItem = ({ item, removeItem  }) => {
+const TaskItem = ({ item, removeItem, onCheck  }) => {
+  const onCheckboxClick = () => {
+    onCheck(item.id);
+  };
+  
   return (
     <tr key={item.id}>
       <td className="text-center">
-        <input type="checkbox" class="h-4 w-4"/>
+        <input type="checkbox" class="h-4 w-4" onClick={onCheckboxClick} checked={item.isDone}/>
       </td>
       <td className="py-8 whitespace-nowrap">
         <div className="text-sm font-bold text-gray-900">{item.title}</div>
       </td>
       <td className="px-6 py-8 whitespace-nowrap">
-        <span className={item.status==="Paused" ? "px-3 py-1 inline-flex text-sm leading-5 font-bold rounded-full text-white bg-yellow-400 " : "px-3 py-1 inline-flex text-sm leading-5 font-bold rounded-full text-white bg-blue-400 "}>
+        <span className={`px-3 py-1 inline-flex text-sm leading-5 font-bold rounded-full text-white ${item.color}`} >
           {item.status}
         </span>
       </td>
-      <td className="px-6 py-8 whitespace-nowrap text-sm font-bold text-gray-500">{item.date}</td>
+      <td className="px-6 py-8 whitespace-nowrap text-sm font-bold text-gray-900">{item.date}</td>
       <td className="px-6 py-8 whitespace-nowrap">
         <div className="text-sm font-bold text-gray-900">{item.time}</div>
       </td>

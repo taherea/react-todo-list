@@ -1,7 +1,7 @@
 import React from "react";
 import TaskItem from "./TaskItem";
 
-const TaskList = ({ items ,removeItem ,currentTab}) => (
+const TaskList = ({ items ,removeItem ,currentTab, onCheck }) => (
 
     <table className="w-full divide-y divide-gray-100">
         <thead>
@@ -42,7 +42,7 @@ const TaskList = ({ items ,removeItem ,currentTab}) => (
         </thead>
         <tbody className="bg-white divide-y divide-gray-100">
             {items.filter(i => i.isDone === currentTab).map(item => (
-                <TaskItem key={item.id} item={item} removeItem={removeItem}/>
+                <TaskItem key={item.id} item={item} removeItem={removeItem} onCheck={onCheck}/>
             ))}
         </tbody>
     </table>

@@ -7,7 +7,7 @@ import Tabs from "../Components/Tabs";
 function TaskContainer() {
   const [items, setItems] = useState([
     {
-      id: "t1", title: "Task #1", status: "Paused",
+      id: "t1", title: "Task #1", status: "Paused", color: "bg-yellow-400",
       date: new Date(2021, 5, 5).toLocaleDateString("en-US", { day: 'numeric' })
         + " " + new Date(2021, 5, 5).toLocaleDateString("en-US", { month: 'long' })
         + " " + new Date(2021, 5, 5).toLocaleDateString("en-US", { year: 'numeric' }),
@@ -15,7 +15,7 @@ function TaskContainer() {
     },
 
     {
-      id: "t2", title: "Task #2", status: "In Progress",
+      id: "t2", title: "Task #2", status: "In Progress", color: "bg-blue-400",
       date: new Date(2021, 5, 21).toLocaleDateString("en-US", { day: 'numeric' })
         + " " + new Date(2021, 5, 21).toLocaleDateString("en-US", { month: 'long' })
         + " " + new Date(2021, 5, 21).toLocaleDateString("en-US", { year: 'numeric' }),
@@ -23,10 +23,10 @@ function TaskContainer() {
     },
 
     {
-      id: "t3", title: "Task #3", status: "In Progress",
-      date: new Date(2021, 5, 7).toLocaleDateString("en-US", { day: 'numeric' })
-        + " " + new Date(2021, 5, 7).toLocaleDateString("en-US", { month: 'long' })
-        + " " + new Date(2021, 5, 7).toLocaleDateString("en-US", { year: 'numeric' }),
+      id: "t3", title: "Task #3", status: "In Progress", color: "bg-blue-400",
+      date: new Date(2021, 5, 8).toLocaleDateString("en-US", { day: 'numeric' })
+        + " " + new Date(2021, 5, 8).toLocaleDateString("en-US", { month: 'long' })
+        + " " + new Date(2021, 5, 8).toLocaleDateString("en-US", { year: 'numeric' }),
       time: "05:30 pm", isDone: false
     },
   ]
@@ -61,9 +61,25 @@ function TaskContainer() {
 
   };
 
+  const onCheck = taskId => {
+    const newList = items.map(task => {
+      if (task.id === taskId) {
+        return {
+          ...task,
+          isDone: !task.isDone,
+          status: (!task.isDone ? "Done" : "In progress"),
+          color: (!task.isDone ? "bg-green-400" : "bg-blue-400")
+        };
+      }
+      console.log(task.isDone)
+      return task;
+    });
+    setItems(newList);
+    setcurrentList(newList);
+  };
 
   const removeItem = itemToBeDeleted => {
-    setItems(items.filter((item) => itemToBeDeleted !== item));
+   setItems(items.filter((item) => itemToBeDeleted !== item));
   };
   /*
   useEffect(() => {
@@ -77,6 +93,7 @@ function TaskContainer() {
       localStorage.setItem('items', JSON.stringify(items));
     }, [items]);
   */
+ 
   return (
     <>
       <div class="py-20 px-20">
@@ -97,7 +114,7 @@ function TaskContainer() {
           <Filters currentFilter={currentFilter} changeFilter={changeFilter}></Filters>
         </div>
         <div class="mt-10">
-          <TaskList items={currentList} removeItem={removeItem} currentTab={currentTab} />
+          <TaskList onCheck={onCheck} items={currentList} removeItem={removeItem} currentTab={currentTab}/>
         </div>
       </div>
     </>
