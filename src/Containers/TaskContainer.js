@@ -3,11 +3,12 @@ import React, { useState } from "react"; // ,useEffect
 import TaskList from "../Components/TaskList";
 import Filters from "../Components/Filters";
 import Tabs from "../Components/Tabs";
+import ModalAdd from "../Components/ModalAdd";
 
 function TaskContainer() {
   const [items, setItems] = useState([
     {
-      id: "t1", title: "Task #1", status: "Paused", color: "bg-yellow-400",
+      id: 1, title: "Task #1", status: "Paused", color: "bg-yellow-400",
       date: new Date(2021, 5, 5).toLocaleDateString("en-US", { day: 'numeric' })
         + " " + new Date(2021, 5, 5).toLocaleDateString("en-US", { month: 'long' })
         + " " + new Date(2021, 5, 5).toLocaleDateString("en-US", { year: 'numeric' }),
@@ -15,7 +16,7 @@ function TaskContainer() {
     },
 
     {
-      id: "t2", title: "Task #2", status: "In Progress", color: "bg-blue-400",
+      id: 2, title: "Task #2", status: "In Progress", color: "bg-blue-400",
       date: new Date(2021, 5, 21).toLocaleDateString("en-US", { day: 'numeric' })
         + " " + new Date(2021, 5, 21).toLocaleDateString("en-US", { month: 'long' })
         + " " + new Date(2021, 5, 21).toLocaleDateString("en-US", { year: 'numeric' }),
@@ -23,7 +24,7 @@ function TaskContainer() {
     },
 
     {
-      id: "t3", title: "Task #3", status: "In Progress", color: "bg-blue-400",
+      id: 3, title: "Task #3", status: "In Progress", color: "bg-blue-400",
       date: new Date(2021, 5, 8).toLocaleDateString("en-US", { day: 'numeric' })
         + " " + new Date(2021, 5, 8).toLocaleDateString("en-US", { month: 'long' })
         + " " + new Date(2021, 5, 8).toLocaleDateString("en-US", { year: 'numeric' }),
@@ -31,9 +32,14 @@ function TaskContainer() {
     },
   ]
   );
+  const [showModal, setShowModal] = React.useState(false);
   const [currentFilter, setcurrentFilter] = useState("MONTH");
   const [currentTab, setcurrentTab] = useState(false); //to do
   const [currentList, setcurrentList]=useState(items.filter(i => i.date.indexOf(new Date().toLocaleDateString("en-US", { month: 'long' })+ " " + new Date().toLocaleDateString("en-US", { year: 'numeric' }))));//MONTH
+  const [ titleInput, setTitleInput ] = useState(null);
+  const [ statusInput, setStatusInput ] = useState(null);
+  const [ dateInput, setDateInput ] = useState(null);
+  const [ timeInput, setTimeInput ] = useState(null);
 
   const changeTab = newTab => {
     setcurrentTab(newTab);
@@ -71,12 +77,48 @@ function TaskContainer() {
           color: (!task.isDone ? "bg-green-400" : "bg-blue-400")
         };
       }
-      console.log(task.isDone)
       return task;
     });
     setItems(newList);
     setcurrentList(newList);
   };
+
+  const handleChange = (e) => {
+    setTitleInput(e.currentTarget.value)
+}
+const handleSelect =(e) => {
+  setStatusInput(e.currentTarget.value)
+}
+  const handleDateChange = value => {
+    setDateInput(value);
+  };
+  const handleTimeChange = (value)=> {
+    setTimeInput(value);
+  };
+const handleSubmit = (e) => {
+  e.preventDefault();
+  addTask(titleInput,statusInput,dateInput,timeInput);
+  setTitleInput(null);
+  setStatusInput(null);
+  setDateInput(null);
+  setTimeInput(null);
+  setShowModal(false);
+}
+const addTask = (titleInput,statusInput,dateInput,timeInput) => {
+  let copy = [...items];
+  copy = [...copy, { id: items.length + 1, title: (titleInput !=null ? titleInput : "None"), status: (statusInput!=null ? statusInput: "In Progress" ),
+   color: (statusInput==="Done" ? "bg-green-400" :statusInput==="In Progress" ? "bg-blue-400" : "bg-yellow-400" ),
+  date:(dateInput!=null ? 
+    dateInput.toDate().toLocaleDateString("en-US", { day: 'numeric' })
+    + " " + dateInput.toDate().toLocaleDateString("en-US", { month: 'long' })
+    + " " + dateInput.toDate().toLocaleDateString("en-US", { year: 'numeric' })
+    : new Date().toLocaleDateString("en-US", { day: 'numeric' })
+    + " " +  new Date().toLocaleDateString("en-US", { month: 'long' })
+    + " " + new Date().toLocaleDateString("en-US", { year: 'numeric' }) ) ,
+  time: (timeInput != null ? timeInput.format('hh:mm a') : "--:--"), isDone: (statusInput==="Done" ? true : false)}];
+  setItems(copy);
+  setcurrentList(copy);
+}
 
   const removeItem = itemToBeDeleted => {
    setItems(items.filter((item) => itemToBeDeleted !== item));
@@ -98,7 +140,7 @@ function TaskContainer() {
     <>
       <div class="py-20 px-20">
         <div class="flex flex-row-reverse mt-15">
-          <button class="bg-blue-400 inline-block py-2 px-4 text-white font-semibold rounded">
+          <button class="bg-blue-400 inline-block py-2 px-4 text-white font-semibold rounded" onClick={() => setShowModal(true)}>
             <div class="flex flex-row-reverse">
               <span class="ml-2 text-sm">Add Task</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-plus-lg mt-1" viewBox="0 0 16 16">
@@ -106,6 +148,8 @@ function TaskContainer() {
               </svg>
             </div>
           </button>
+          {showModal ? (<ModalAdd setShowModal={setShowModal} handleSubmit={handleSubmit} handleChange={handleChange} 
+          titleInput={titleInput} handleSelect={handleSelect} handleDateChange={handleDateChange} handleTimeChange={handleTimeChange}/>) : null}
         </div>
         <div>
           <Tabs currentTab={currentTab} changeTab={changeTab}></Tabs>
