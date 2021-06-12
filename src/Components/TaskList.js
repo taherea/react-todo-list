@@ -3,7 +3,7 @@ import TaskItem from "./TaskItem";
 
 const TaskList = ({ items ,removeItem,setEditItem,editItem,currentTab, onCheck ,showModalEdit,setShowModalEdit,closeModal,titleInput,
     handleSave,handleTitleChange,handleSelect,handleDateChange,handleTimeChange,
-    setTitleInput,setStatusInput,setDateInput,setTimeInput}) => (
+    setTitleInput,setStatusInput,setDateInput,setTimeInput,sortTitle}) => (
 
     <table className="w-full divide-y divide-gray-100">
         <thead>
@@ -12,13 +12,12 @@ const TaskList = ({ items ,removeItem,setEditItem,editItem,currentTab, onCheck ,
                     scope="col"
                     className="py-3 text-left text-sm font-bold text-gray-400 tracking-wider"
                 >
-                    
-                    </th>
+                </th>
                 <th
                     scope="col"
-                    className="py-3 text-left text-sm font-bold text-gray-400 tracking-wider"
+                    className="py-3 text-left tracking-wider"
                 >
-                    Title
+                    <button className="text-sm font-bold text-gray-400" onClick={() => sortTitle()}>Title</button>
                     </th>
                 <th
                     scope="col"

@@ -43,6 +43,25 @@ function TaskContainer() {
   const [ timeInput, setTimeInput ] = useState(null);
   const [ editItem, setEditItem] = useState(null);
 
+  var order=false;
+  const sortTitle = () =>{
+    let copy = [...currentList];
+    if (order) {
+      setcurrentList(copy.sort((a, b) => {
+        if (a.title < b.title) return -1;
+        if (a.title > b.title) return 1;
+        return 0;
+      }));
+    }
+    setcurrentList(copy.reverse((a, b) => {
+      if (a.name < b.name) return 1;
+      if (a.name > b.name) return -1;
+      return 0;
+    }));
+    
+      order=!order;
+  }
+  
   const closeModal = (item) => {
   setTitleInput(null);
   setStatusInput(null);
@@ -148,7 +167,7 @@ const editTask = (titleInput,statusInput,dateInput,timeInput,editItem) => {
   const edited =items.map(el => (el.id === editItem.id ? {...el, 
     title :titleInput, status :statusInput,
     color: (statusInput==="Done" ? "bg-green-400" :statusInput==="In Progress" ? "bg-blue-400" :statusInput==="Paused" ? "bg-yellow-400" : "bg-blue-400" ),
-    date:(dateInput!=null && dateInput!= editItem.date ? 
+    date:(dateInput!== null && dateInput!== editItem.date ? 
       dateInput.toDate().toLocaleDateString("en-US", { day: '2-digit' })
       + " " + dateInput.toDate().toLocaleDateString("en-US", { month: 'short' })
       + " " + dateInput.toDate().toLocaleDateString("en-US", { year: 'numeric' })
@@ -212,7 +231,7 @@ const editTask = (titleInput,statusInput,dateInput,timeInput,editItem) => {
         <div class="mt-10">
           <TaskList onCheck={onCheck} items={currentList} setEditItem={setEditItem} editItem={editItem} removeItem={removeItem} currentTab={currentTab} showModalEdit={showModalEdit} setShowModalEdit={setShowModalEdit} closeModal={closeModal}
           titleInput={titleInput} handleSave={handleSave} handleTitleChange={handleTitleChange} handleSelect={handleSelect} handleDateChange={handleDateChange} handleTimeChange={handleTimeChange} 
-          setTitleInput={setTitleInput} setStatusInput={setStatusInput} setDateInput={setDateInput} setTimeInput={setTimeInput}/>
+          setTitleInput={setTitleInput} setStatusInput={setStatusInput} setDateInput={setDateInput} setTimeInput={setTimeInput} sortTitle={sortTitle}/>
         </div>
       </div>
     </>
