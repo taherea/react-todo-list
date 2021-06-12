@@ -1,7 +1,9 @@
 import React from "react";
 import TaskItem from "./TaskItem";
 
-const TaskList = ({ items ,removeItem ,currentTab, onCheck }) => (
+const TaskList = ({ items ,removeItem,setEditItem,editItem,currentTab, onCheck ,showModalEdit,setShowModalEdit,closeModal,titleInput,
+    handleSave,handleTitleChange,handleSelect,handleDateChange,handleTimeChange,
+    setTitleInput,setStatusInput,setDateInput,setTimeInput}) => (
 
     <table className="w-full divide-y divide-gray-100">
         <thead>
@@ -42,7 +44,9 @@ const TaskList = ({ items ,removeItem ,currentTab, onCheck }) => (
         </thead>
         <tbody className="bg-white divide-y divide-gray-100">
             {items.filter(i => i.isDone === currentTab).map(item => (
-                <TaskItem key={item.id} item={item} removeItem={removeItem} onCheck={onCheck}/>
+                <TaskItem key={item.id} setEditItem={setEditItem} editItem={editItem} item={item} removeItem={removeItem} onCheck={onCheck} showModalEdit={showModalEdit} setShowModalEdit={setShowModalEdit} closeModal={closeModal}
+          titleInput={titleInput} handleSave={handleSave} handleTitleChange={handleTitleChange} handleSelect={handleSelect} handleDateChange={handleDateChange} handleTimeChange={handleTimeChange} 
+          setTitleInput={setTitleInput} setStatusInput={setStatusInput} setDateInput={setDateInput} setTimeInput={setTimeInput}/>
             ))}
         </tbody>
     </table>

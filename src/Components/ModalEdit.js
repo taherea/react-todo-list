@@ -1,8 +1,9 @@
 import React from "react";
 import { TimePicker, DatePicker } from 'antd';
 import 'antd/dist/antd.css';
+import moment from "moment";
 
-const ModalAdd = ({ closeModal ,handleSubmit,handleTitleChange,titleInput,handleSelect,handleDateChange,handleTimeChange}) => (
+const ModalEdit = ({ closeModal,setShowModalEdit,titleInput,showModalEdit,editItem,handleSave,handleTitleChange,handleSelect,handleDateChange,handleTimeChange}) => (
   <>
     <div
       className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
@@ -17,28 +18,31 @@ const ModalAdd = ({ closeModal ,handleSubmit,handleTitleChange,titleInput,handle
               <span className="mr-3 text-red-500 text-lg block outline-none focus:outline-none">×</span>
             </button>
           </div>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSave}>
             <div className="relative px-6 py-1 flex-auto">
               <div>
                 <label htmlFor='TaskTitle'>Title *</label>
                 <input className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4  focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent`}
-                value={titleInput} 
+                value={(titleInput !=null ? titleInput : editItem.title)}
                 type="text" 
-                onChange={handleTitleChange} />
+                onChange={handleTitleChange}/>
               </div>
               <div>
                 <label htmlFor='status'>Status</label>
                 <select id="status" name="status" onChange={handleSelect} class="w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
-                  <option value="In Progress">In Progress</option>
-                  <option value="Paused">Paused</option>
-                  <option value="Done">Done</option>
+                {editItem.status === "In Progress" ? <option selected value="In Progress">In Progress</option>: <option value="In Progress">In Progress</option>} 
+                {editItem.status === "Paused" ? <option selected value="Paused">Paused</option>: <option value="Paused">Paused</option>} 
+                {editItem.status === "Done" ? <option selected value="Done">Done</option>: <option value="Done">Done</option>}
                 </select>
               </div>
               <div>
                 <label htmlFor='date'>Date</label>
                 <div>
-                <DatePicker placeholder="select date" onChange={handleDateChange} style={{
-                    width: "100%",
+                <DatePicker onChange={handleDateChange} placeholder="select date" defaultValue={moment(new Date(`${editItem.date}`).toLocaleDateString(`en`, {day:`2-digit`})
+                + "-" + new Date(`${editItem.date}`).toLocaleDateString(`en`, {month:`2-digit`})
+                + "-" + new Date(`${editItem.date}`).toLocaleDateString(`en`, { year: `numeric` }), 'DD-MM-YYYY')}
+                style={{
+                    width: "100%", 
                     padding: "0.5rem",
                     outline: "2px solid transparent",
                     margin: "1px",
@@ -52,7 +56,7 @@ const ModalAdd = ({ closeModal ,handleSubmit,handleTitleChange,titleInput,handle
               <div class="mt-4">
                 <label htmlFor='date'>Time</label>
                 <div>
-                <TimePicker placeholder="select time" onChange={handleTimeChange} use12Hours format="h:mm a" style={{
+                <TimePicker placeholder="select time"  defaultValue ={moment(editItem.time, 'hh:mm a')} onChange={handleTimeChange} use12Hours format="hh:mm a" style={{
                     width: "100%",
                     padding: "0.5rem",
                     outline: "2px solid transparent",
@@ -81,7 +85,7 @@ const ModalAdd = ({ closeModal ,handleSubmit,handleTitleChange,titleInput,handle
                 type="sumbit"
                 disabled={!titleInput}
               >
-                Add
+                Save
               </button>
             </div>
           </form>
@@ -92,4 +96,4 @@ const ModalAdd = ({ closeModal ,handleSubmit,handleTitleChange,titleInput,handle
   </>
 );
 
-export default ModalAdd;
+export default ModalEdit;

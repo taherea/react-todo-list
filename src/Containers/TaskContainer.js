@@ -1,5 +1,5 @@
 
-import React, { useState } from "react"; // ,useEffect
+import React, { useState ,useEffect} from "react";
 import TaskList from "../Components/TaskList";
 import Filters from "../Components/Filters";
 import Tabs from "../Components/Tabs";
@@ -9,37 +9,53 @@ function TaskContainer() {
   const [items, setItems] = useState([
     {
       id: 1, title: "Task #1", status: "Paused", color: "bg-yellow-400",
-      date: new Date(2021, 5, 5).toLocaleDateString("en-US", { day: 'numeric' })
-        + " " + new Date(2021, 5, 5).toLocaleDateString("en-US", { month: 'long' })
-        + " " + new Date(2021, 5, 5).toLocaleDateString("en-US", { year: 'numeric' }),
+      date: new Date(2021, 6, 5).toLocaleDateString("en-US", { day: '2-digit' })
+        + " " + new Date(2021, 6, 5).toLocaleDateString("en-US", { month: 'short' })
+        + " " + new Date(2021, 6, 5).toLocaleDateString("en-US", { year: 'numeric' }),
       time: "09:30 am", isDone: false
     },
 
     {
       id: 2, title: "Task #2", status: "In Progress", color: "bg-blue-400",
-      date: new Date(2021, 5, 21).toLocaleDateString("en-US", { day: 'numeric' })
-        + " " + new Date(2021, 5, 21).toLocaleDateString("en-US", { month: 'long' })
+      date: new Date(2021, 5, 21).toLocaleDateString("en-US", { day: '2-digit' })
+        + " " + new Date(2021, 5, 21).toLocaleDateString("en-US", { month: 'short' })
         + " " + new Date(2021, 5, 21).toLocaleDateString("en-US", { year: 'numeric' }),
       time: "11:00 am", isDone: false
     },
 
     {
       id: 3, title: "Task #3", status: "In Progress", color: "bg-blue-400",
-      date: new Date(2021, 5, 8).toLocaleDateString("en-US", { day: 'numeric' })
-        + " " + new Date(2021, 5, 8).toLocaleDateString("en-US", { month: 'long' })
+      date: new Date(2021, 5, 8).toLocaleDateString("en-US", { day: '2-digit' })
+        + " " + new Date(2021, 5, 8).toLocaleDateString("en-US", { month: 'short' })
         + " " + new Date(2021, 5, 8).toLocaleDateString("en-US", { year: 'numeric' }),
       time: "05:30 pm", isDone: false
     },
   ]
   );
-  const [showModal, setShowModal] = React.useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showModalEdit, setShowModalEdit] = useState(false);
   const [currentFilter, setcurrentFilter] = useState("MONTH");
   const [currentTab, setcurrentTab] = useState(false); //to do
-  const [currentList, setcurrentList]=useState(items.filter(i => i.date.indexOf(new Date().toLocaleDateString("en-US", { month: 'long' })+ " " + new Date().toLocaleDateString("en-US", { year: 'numeric' }))));//MONTH
+  const [currentList, setcurrentList]=useState(items.filter(i => i.date.indexOf(new Date().toLocaleDateString("en-US", { month: 'short' })+ " " + new Date().toLocaleDateString("en-US", { year: 'numeric' }))));//MONTH
   const [ titleInput, setTitleInput ] = useState(null);
   const [ statusInput, setStatusInput ] = useState(null);
   const [ dateInput, setDateInput ] = useState(null);
   const [ timeInput, setTimeInput ] = useState(null);
+  const [ editItem, setEditItem] = useState(null);
+
+  const closeModal = (item) => {
+  setTitleInput(null);
+  setStatusInput(null);
+  setDateInput(null);
+  setTimeInput(null);
+  setShowModalEdit(false)
+
+  if (showModal)
+  setShowModal(false);
+  else if(showModalEdit)
+  setShowModalEdit(false)
+};
+
 
   const changeTab = newTab => {
     setcurrentTab(newTab);
@@ -83,7 +99,7 @@ function TaskContainer() {
     setcurrentList(newList);
   };
 
-  const handleChange = (e) => {
+  const handleTitleChange = (e) => {
     setTitleInput(e.currentTarget.value)
 }
 const handleSelect =(e) => {
@@ -107,23 +123,48 @@ const handleSubmit = (e) => {
 const addTask = (titleInput,statusInput,dateInput,timeInput) => {
   let copy = [...items];
   copy = [...copy, { id: items.length + 1, title: (titleInput !=null ? titleInput : "None"), status: (statusInput!=null ? statusInput: "In Progress" ),
-   color: (statusInput==="Done" ? "bg-green-400" :statusInput==="In Progress" ? "bg-blue-400" : "bg-yellow-400" ),
+   color: (statusInput==="Done" ? "bg-green-400" :statusInput==="In Progress" ? "bg-blue-400" :statusInput==="Paused" ? "bg-yellow-400" : "bg-blue-400" ),
   date:(dateInput!=null ? 
-    dateInput.toDate().toLocaleDateString("en-US", { day: 'numeric' })
-    + " " + dateInput.toDate().toLocaleDateString("en-US", { month: 'long' })
+    dateInput.toDate().toLocaleDateString("en-US", { day: '2-digit' })
+    + " " + dateInput.toDate().toLocaleDateString("en-US", { month: 'short' })
     + " " + dateInput.toDate().toLocaleDateString("en-US", { year: 'numeric' })
-    : new Date().toLocaleDateString("en-US", { day: 'numeric' })
-    + " " +  new Date().toLocaleDateString("en-US", { month: 'long' })
+    : new Date().toLocaleDateString("en-US", { day: '2-digit' })
+    + " " +  new Date().toLocaleDateString("en-US", { month: 'short' })
     + " " + new Date().toLocaleDateString("en-US", { year: 'numeric' }) ) ,
   time: (timeInput != null ? timeInput.format('hh:mm a') : "--:--"), isDone: (statusInput==="Done" ? true : false)}];
   setItems(copy);
   setcurrentList(copy);
 }
+const handleSave = (e) => {
+  e.preventDefault();
+  editTask(titleInput,statusInput,dateInput,timeInput,editItem);
+  setTitleInput(null);
+  setStatusInput(null);
+  setDateInput(null);
+  setTimeInput(null);
+  closeModal();
+}
+const editTask = (titleInput,statusInput,dateInput,timeInput,editItem) => {
+  const edited =items.map(el => (el.id === editItem.id ? {...el, 
+    title :titleInput, status :statusInput,
+    color: (statusInput==="Done" ? "bg-green-400" :statusInput==="In Progress" ? "bg-blue-400" :statusInput==="Paused" ? "bg-yellow-400" : "bg-blue-400" ),
+    date:(dateInput!=null && dateInput!= editItem.date ? 
+      dateInput.toDate().toLocaleDateString("en-US", { day: '2-digit' })
+      + " " + dateInput.toDate().toLocaleDateString("en-US", { month: 'short' })
+      + " " + dateInput.toDate().toLocaleDateString("en-US", { year: 'numeric' })
+      : new Date().toLocaleDateString("en-US", { day: '2-digit' })
+      + " " +  new Date().toLocaleDateString("en-US", { month: 'short' })
+      + " " + new Date().toLocaleDateString("en-US", { year: 'numeric' }) ) ,
+      time:timeInput.format('hh:mm a'), isDone: (statusInput==="Done" ? true : false)} : el));
+  setItems(edited);
+  setcurrentList(edited);
+}
 
   const removeItem = itemToBeDeleted => {
    setItems(items.filter((item) => itemToBeDeleted !== item));
+   setcurrentList(currentList.filter((item) => itemToBeDeleted !== item));
   };
-  /*
+  
   useEffect(() => {
       const items = JSON.parse(localStorage.getItem('items'));
       if (items) {
@@ -134,7 +175,18 @@ const addTask = (titleInput,statusInput,dateInput,timeInput) => {
   useEffect(() => {
       localStorage.setItem('items', JSON.stringify(items));
     }, [items]);
-  */
+
+  useEffect(() => {
+      const currentList = JSON.parse(localStorage.getItem('currentList'));
+      if (currentList) {
+        setcurrentList(currentList);
+      }
+    }, []);
+  
+  useEffect(() => {
+      localStorage.setItem('currentList', JSON.stringify(currentList));
+    }, [currentList]);
+  
  
   return (
     <>
@@ -148,7 +200,7 @@ const addTask = (titleInput,statusInput,dateInput,timeInput) => {
               </svg>
             </div>
           </button>
-          {showModal ? (<ModalAdd setShowModal={setShowModal} handleSubmit={handleSubmit} handleChange={handleChange} 
+          {showModal ? (<ModalAdd closeModal={closeModal} handleSubmit={handleSubmit} handleTitleChange={handleTitleChange} 
           titleInput={titleInput} handleSelect={handleSelect} handleDateChange={handleDateChange} handleTimeChange={handleTimeChange}/>) : null}
         </div>
         <div>
@@ -158,7 +210,9 @@ const addTask = (titleInput,statusInput,dateInput,timeInput) => {
           <Filters currentFilter={currentFilter} changeFilter={changeFilter}></Filters>
         </div>
         <div class="mt-10">
-          <TaskList onCheck={onCheck} items={currentList} removeItem={removeItem} currentTab={currentTab}/>
+          <TaskList onCheck={onCheck} items={currentList} setEditItem={setEditItem} editItem={editItem} removeItem={removeItem} currentTab={currentTab} showModalEdit={showModalEdit} setShowModalEdit={setShowModalEdit} closeModal={closeModal}
+          titleInput={titleInput} handleSave={handleSave} handleTitleChange={handleTitleChange} handleSelect={handleSelect} handleDateChange={handleDateChange} handleTimeChange={handleTimeChange} 
+          setTitleInput={setTitleInput} setStatusInput={setStatusInput} setDateInput={setDateInput} setTimeInput={setTimeInput}/>
         </div>
       </div>
     </>
