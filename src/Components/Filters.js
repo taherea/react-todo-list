@@ -3,7 +3,7 @@ import React from "react";
 const Filters = ({ currentFilter, changeFilter}) => (
     <div>
     <button
-      class={`bg-white text-sm inline-block border-l border-t border-r border-b py-2 px-6 font-semibold rounded-tl-md rounded-bl-md
+      className={`bg-white text-sm inline-block border-l border-t border-r border-b py-2 px-6 font-semibold rounded-tl-md rounded-bl-md
        ${currentFilter === "MONTH"  ? 'text-blue-400' : 'text-gray-400'}`} 
        onClick={() => changeFilter("MONTH", new Date().toLocaleDateString("en-US", { month: 'short' })
        +" " + new Date().toLocaleDateString("en-US", { year: 'numeric' }) )} //year and month as second arg
@@ -11,7 +11,7 @@ const Filters = ({ currentFilter, changeFilter}) => (
       Month
     </button>
     <button
-      class={`bg-white text-sm inline-block border-t border-r border-b py-2 px-7 font-semibold
+      className={`bg-white text-sm inline-block border-t border-r border-b py-2 px-7 font-semibold
       ${currentFilter === "WEEK"  ? 'text-blue-400' : 'text-gray-400'}`} 
       onClick={() => changeFilter("WEEK",new Date().toLocaleDateString("en-US", { day: '2-digit' }) 
       + " " + new Date().toLocaleDateString("en-US", { month: 'short' })
@@ -20,7 +20,7 @@ const Filters = ({ currentFilter, changeFilter}) => (
       Week
     </button>
     <button  
-       class={`bg-white text-sm inline-block border-t border-r border-b py-2 px-8 font-semibold rounded-tr-md rounded-br-md
+       className={`bg-white text-sm inline-block border-t border-r border-b py-2 px-8 font-semibold rounded-tr-md rounded-br-md
        ${currentFilter === "DAY"  ? 'text-blue-400' : 'text-gray-400'}`} 
        onClick={() => changeFilter("DAY" ,new Date().toLocaleDateString("en-US", { day: '2-digit' }) 
        + " " + new Date().toLocaleDateString("en-US", { month: 'short' })
@@ -31,4 +31,4 @@ const Filters = ({ currentFilter, changeFilter}) => (
     </div>
 );
 
-export default Filters;
+export default React.memo(Filters)

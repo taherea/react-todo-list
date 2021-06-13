@@ -4,10 +4,10 @@ import TaskItem from "./TaskItem";
 const TaskList = ({ items ,removeItem,setEditItem,editItem,currentTab, onCheck ,showModalEdit,setShowModalEdit,closeModal,titleInput,
     handleSave,handleTitleChange,handleSelect,handleDateChange,handleTimeChange,
     setTitleInput,setStatusInput,setDateInput,setTimeInput,sortTitle}) => (
-
+<div className="overflow-x-auto">
     <table className="w-full divide-y divide-gray-100">
         <thead>
-            <tr class="max-w-full divide-y divide-gray-100">
+            <tr className="max-w-full divide-y divide-gray-100">
                 <th
                     scope="col"
                     className="py-3 text-left text-sm font-bold text-gray-400 tracking-wider"
@@ -49,6 +49,7 @@ const TaskList = ({ items ,removeItem,setEditItem,editItem,currentTab, onCheck ,
             ))}
         </tbody>
     </table>
+    </div>
 );
 
 export default TaskList;

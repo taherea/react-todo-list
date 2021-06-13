@@ -28,7 +28,7 @@ const ModalAdd = ({ closeModal ,handleSubmit,handleTitleChange,titleInput,handle
               </div>
               <div>
                 <label htmlFor='status'>Status</label>
-                <select id="status" name="status" onChange={handleSelect} class="w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+                <select id="status" name="status" onChange={handleSelect} className="w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
                   <option value="In Progress">In Progress</option>
                   <option value="Paused">Paused</option>
                   <option value="Done">Done</option>
@@ -49,7 +49,7 @@ const ModalAdd = ({ closeModal ,handleSubmit,handleTitleChange,titleInput,handle
                   }}/>
                 </div>
               </div>
-              <div class="mt-4">
+              <div className="mt-4">
                 <label htmlFor='date'>Time</label>
                 <div>
                 <TimePicker placeholder="select time" onChange={handleTimeChange} use12Hours format="h:mm a" style={{
