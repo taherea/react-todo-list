@@ -29,10 +29,10 @@ const ModalEdit = ({ closeModal,setShowModalEdit,titleInput,showModalEdit,editIt
               </div>
               <div>
                 <label htmlFor='status'>Status</label>
-                <select id="status" name="status" onChange={handleSelect} className="w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
-                {editItem.status === "In Progress" ? <option selected value="In Progress">In Progress</option>: <option value="In Progress">In Progress</option>} 
-                {editItem.status === "Paused" ? <option selected value="Paused">Paused</option>: <option value="Paused">Paused</option>} 
-                {editItem.status === "Done" ? <option selected value="Done">Done</option>: <option value="Done">Done</option>}
+                <select id="status" name="status" onChange={handleSelect} defaultValue={editItem.status} className="w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+                <option value="In Progress">In Progress</option>
+                 <option value="Paused">Paused</option> 
+                 <option value="Done">Done</option>
                 </select>
               </div>
               <div>

@@ -42,24 +42,26 @@ function TaskContainer() {
   const [ dateInput, setDateInput ] = useState(null);
   const [ timeInput, setTimeInput ] = useState(null);
   const [ editItem, setEditItem] = useState(null);
-
-  var order=false;
-  const sortTitle = () =>{
+  const [ order, setOrder] = useState(true);
+  
+  const sortTitle = () => {
     let copy = [...currentList];
     if (order) {
-      setcurrentList(copy.sort((a, b) => {
+      copy.sort((a, b) => {
         if (a.title < b.title) return -1;
         if (a.title > b.title) return 1;
         return 0;
-      }));
+      });
     }
-    setcurrentList(copy.reverse((a, b) => {
-      if (a.name < b.name) return 1;
-      if (a.name > b.name) return -1;
-      return 0;
-    }));
-    
-      order=!order;
+    else{
+      copy.reverse((a, b) => {
+        if (a.title < b.title) return 1;
+        if (a.title > b.title) return -1;
+        return 0;
+      });
+    }
+    setcurrentList(copy);
+    setOrder(!order);
   }
   
   const closeModal = (item) => {
