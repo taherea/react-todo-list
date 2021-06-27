@@ -3,7 +3,10 @@ import TaskItem from "./TaskItem";
 
 const TaskList = ({ items ,removeItem,setEditItem,editItem,currentTab, onCheck ,showModalEdit,setShowModalEdit,closeModal,titleInput,
     handleSave,handleTitleChange,handleSelect,handleDateChange,handleTimeChange,
-    setTitleInput,setStatusInput,setDateInput,setTimeInput,sortTitle}) => (
+    setTitleInput,setStatusInput,setDateInput,setTimeInput,sortTitle} :
+    { items :any,removeItem:any,setEditItem:any,editItem:any,currentTab:boolean, onCheck:any ,showModalEdit:boolean,setShowModalEdit:any,closeModal:any,titleInput:any,
+        handleSave:any,handleTitleChange:any,handleSelect:any,handleDateChange:any,handleTimeChange:any,
+        setTitleInput:any,setStatusInput:any,setDateInput:any,setTimeInput:any,sortTitle:any}) => (
 <div className="overflow-x-auto">
     <table className="w-full divide-y divide-gray-100">
         <thead>
@@ -42,11 +45,11 @@ const TaskList = ({ items ,removeItem,setEditItem,editItem,currentTab, onCheck ,
             </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-100">
-            {items.filter(i => i.isDone === currentTab).map(item => (
-                <TaskItem key={item.id} setEditItem={setEditItem} editItem={editItem} item={item} removeItem={removeItem} onCheck={onCheck} showModalEdit={showModalEdit} setShowModalEdit={setShowModalEdit} closeModal={closeModal}
-          titleInput={titleInput} handleSave={handleSave} handleTitleChange={handleTitleChange} handleSelect={handleSelect} handleDateChange={handleDateChange} handleTimeChange={handleTimeChange} 
-          setTitleInput={setTitleInput} setStatusInput={setStatusInput} setDateInput={setDateInput} setTimeInput={setTimeInput}/>
-            ))}
+            {items.filter((i: { isDone: boolean; }) => {
+                return i.isDone === currentTab;
+            }).map((it: { id: number }) => {
+                return (<TaskItem key={it.id} setEditItem={setEditItem} editItem={editItem} item={it} removeItem={removeItem} onCheck={onCheck} showModalEdit={showModalEdit} setShowModalEdit={setShowModalEdit} closeModal={closeModal} titleInput={titleInput} handleSave={handleSave} handleTitleChange={handleTitleChange} handleSelect={handleSelect} handleDateChange={handleDateChange} handleTimeChange={handleTimeChange} setTitleInput={setTitleInput} setStatusInput={setStatusInput} setDateInput={setDateInput} setTimeInput={setTimeInput} />);
+            })}
         </tbody>
     </table>
     </div>

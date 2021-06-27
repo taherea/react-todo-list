@@ -2,7 +2,7 @@ import React from "react";
 import { TimePicker, DatePicker } from 'antd';
 import 'antd/dist/antd.css';
 
-const ModalAdd = ({ closeModal ,handleSubmit,handleTitleChange,titleInput,handleSelect,handleDateChange,handleTimeChange}) => (
+const ModalAdd = ({ closeModal ,handleSubmit,handleTitleChange,titleInput,handleSelect,handleDateChange,handleTimeChange}:{ closeModal:any ,handleSubmit:any,handleTitleChange:any,titleInput:any,handleSelect:any,handleDateChange :any,handleTimeChange:any }) => (
   <>
     <div
       className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
@@ -17,7 +17,7 @@ const ModalAdd = ({ closeModal ,handleSubmit,handleTitleChange,titleInput,handle
               <span className="mr-3 text-red-500 text-lg block outline-none focus:outline-none">×</span>
             </button>
           </div>
-          <form onSubmit={handleSubmit}>
+          <form>
             <div className="relative px-6 py-1 flex-auto">
               <div>
                 <label htmlFor='TaskTitle'>Title *</label>
@@ -78,7 +78,7 @@ const ModalAdd = ({ closeModal ,handleSubmit,handleTitleChange,titleInput,handle
               <button
                 className={`inline-block py-2 px-4 text-white font-semibold rounded
                 ${titleInput != null  ? 'bg-blue-400 ' : 'bg-blue-200'}`}
-                type="sumbit"
+                onClick={handleSubmit}
                 disabled={!titleInput}
               >
                 Add

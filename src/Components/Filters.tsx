@@ -1,6 +1,6 @@
 import React from "react";
 
-const Filters = ({ currentFilter, changeFilter}) => (
+const Filters = ({ currentFilter, changeFilter}: { currentFilter: string, changeFilter: any }) => (
     <div>
     <button
       className={`bg-white text-sm inline-block border-l border-t border-r border-b py-2 px-6 font-semibold rounded-tl-md rounded-bl-md

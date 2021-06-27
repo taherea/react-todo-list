@@ -5,44 +5,53 @@ import Filters from "../Components/Filters";
 import Tabs from "../Components/Tabs";
 import ModalAdd from "../Components/ModalAdd";
 
-function TaskContainer() {
-  const [items, setItems] = useState([
-    {
-      id: 1, title: "Task #1", status: "Paused", color: "bg-yellow-400",
-      date: new Date(2021, 5, 13).toLocaleDateString("en-US", { day: '2-digit' })
-        + " " + new Date(2021, 5, 13).toLocaleDateString("en-US", { month: 'short' })
-        + " " + new Date(2021, 5, 13).toLocaleDateString("en-US", { year: 'numeric' }),
-      time: "09:30 am", isDone: false
-    },
+interface Item {
+  id: number;
+  title: string;
+  status: string;
+  color: string;
+  date: string;
+  time: string;
+  isDone: boolean;
+}
+const DEFAULT_ITEMS: Item[] = [
+  {
+    id: 1, title: "Task #1", status: "Paused", color: "bg-yellow-400",
+    date: new Date(2021, 5, 13).toLocaleDateString("en-US", { day: '2-digit' })
+      + " " + new Date(2021, 5, 13).toLocaleDateString("en-US", { month: 'short' })
+      + " " + new Date(2021, 5, 13).toLocaleDateString("en-US", { year: 'numeric' }),
+    time: "09:30 am", isDone: false
+  },
 
-    {
-      id: 2, title: "Task #2", status: "In Progress", color: "bg-blue-400",
-      date: new Date(2021, 5, 21).toLocaleDateString("en-US", { day: '2-digit' })
-        + " " + new Date(2021, 5, 21).toLocaleDateString("en-US", { month: 'short' })
-        + " " + new Date(2021, 5, 21).toLocaleDateString("en-US", { year: 'numeric' }),
-      time: "11:00 am", isDone: false
-    },
+  {
+    id: 2, title: "Task #2", status: "In Progress", color: "bg-blue-400",
+    date: new Date(2021, 5, 21).toLocaleDateString("en-US", { day: '2-digit' })
+      + " " + new Date(2021, 5, 21).toLocaleDateString("en-US", { month: 'short' })
+      + " " + new Date(2021, 5, 21).toLocaleDateString("en-US", { year: 'numeric' }),
+    time: "11:00 am", isDone: false
+  },
 
-    {
-      id: 3, title: "Task #3", status: "In Progress", color: "bg-blue-400",
-      date: new Date(2021, 5, 15).toLocaleDateString("en-US", { day: '2-digit' })
-        + " " + new Date(2021, 5, 15).toLocaleDateString("en-US", { month: 'short' })
-        + " " + new Date(2021, 5, 15).toLocaleDateString("en-US", { year: 'numeric' }),
-      time: "05:30 pm", isDone: false
-    },
-  ]
-  );
-  const [showModal, setShowModal] = useState(false);
-  const [showModalEdit, setShowModalEdit] = useState(false);
-  const [currentFilter, setcurrentFilter] = useState("MONTH");
-  const [currentTab, setcurrentTab] = useState(false); //to do
-  const [currentList, setcurrentList]=useState(items.filter(i => i.date.indexOf(new Date().toLocaleDateString("en-US", { month: 'short' })+ " " + new Date().toLocaleDateString("en-US", { year: 'numeric' }))));//MONTH
-  const [ titleInput, setTitleInput ] = useState(null);
-  const [ statusInput, setStatusInput ] = useState(null);
-  const [ dateInput, setDateInput ] = useState(null);
-  const [ timeInput, setTimeInput ] = useState(null);
-  const [ editItem, setEditItem] = useState(null);
-  const [ order, setOrder] = useState(true);
+  {
+    id: 3, title: "Task #3", status: "In Progress", color: "bg-blue-400",
+    date: new Date(2021, 5, 15).toLocaleDateString("en-US", { day: '2-digit' })
+      + " " + new Date(2021, 5, 15).toLocaleDateString("en-US", { month: 'short' })
+      + " " + new Date(2021, 5, 15).toLocaleDateString("en-US", { year: 'numeric' }),
+    time: "05:30 pm", isDone: false
+  },
+];
+function TaskContainer():JSX.Element {
+  const [items, setItems] = useState<Item[]>(DEFAULT_ITEMS);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showModalEdit, setShowModalEdit] = useState<boolean>(false);
+  const [currentFilter, setcurrentFilter] = useState<string>("MONTH");
+  const [currentTab, setcurrentTab] = useState<boolean>(false); //to do
+  const [currentList, setcurrentList]=useState<Item[]>(items.filter(i => i.date.indexOf(new Date().toLocaleDateString("en-US", { month: 'short' })+ " " + new Date().toLocaleDateString("en-US", { year: 'numeric' }))));//MONTH
+  const [ titleInput, setTitleInput ] = useState<any>(null);
+  const [ statusInput, setStatusInput ] = useState<any>(null);
+  const [ dateInput, setDateInput ] = useState<any>(null);
+  const [ timeInput, setTimeInput ] = useState<any>(null);
+  const [ editItem, setEditItem] = useState<any>(null);
+  const [ order, setOrder] = useState<boolean>(true);
   
   const sortTitle = () => {
     let copy = [...currentList];
@@ -54,7 +63,7 @@ function TaskContainer() {
       });
     }
     else{
-      copy.reverse((a, b) => {
+      copy.sort((a, b) => {
         if (a.title < b.title) return 1;
         if (a.title > b.title) return -1;
         return 0;
@@ -64,7 +73,7 @@ function TaskContainer() {
     setOrder(!order);
   }
   
-  const closeModal = (item) => {
+  const closeModal = () => {
   setTitleInput(null);
   setStatusInput(null);
   setDateInput(null);
@@ -88,12 +97,7 @@ function TaskContainer() {
       let day = parseInt(filter.substring(0,spaceIndexToday), 10);
       let start = (day - 3)
       let end = (day + 3)
-      let filtered = items.filter(inWeek);
-      function inWeek(item) {
-        let spaceIndexItem = item.date.indexOf(" ");
-        let dayOfItem = parseInt(item.date.substring(0,spaceIndexItem), 10);
-        return (dayOfItem <= end && dayOfItem >= start)
-      }
+      let filtered = items.filter(item => parseInt(item.date.substring(0,item.date.indexOf(" ")), 10) <= end  &&  parseInt(item.date.substring(0,item.date.indexOf(" ")), 10) >= start);
       setcurrentFilter(newFilter);
       setcurrentList(filtered)
     }
@@ -104,7 +108,7 @@ function TaskContainer() {
 
   },[items])
 
-  const onCheck = taskId => {
+  const onCheck = (taskId:number) => {
     const newList = items.map(task => {
       if (task.id === taskId) {
         return {
@@ -120,19 +124,19 @@ function TaskContainer() {
     setcurrentList(newList);
   };
 
-  const handleTitleChange = (e) => {
+  const handleTitleChange = (e :React.FormEvent<HTMLInputElement>) => {
     setTitleInput(e.currentTarget.value)
   }
-  const handleSelect =(e) => {
+  const handleSelect =(e:React.FormEvent<HTMLSelectElement>) => {
   setStatusInput(e.currentTarget.value)
   }
-  const handleDateChange = value => {
+  const handleDateChange = (value:string) :void => {
     setDateInput(value);
   };
-  const handleTimeChange = (value)=> {
+  const handleTimeChange = (value:string) :void=> {
     setTimeInput(value);
   };
-const handleSubmit = (e) => {
+const handleSubmit = (e:React.MouseEvent<HTMLButtonElement>) => {
   e.preventDefault();
   addTask(titleInput,statusInput,dateInput,timeInput);
   setTitleInput(null);
@@ -141,7 +145,7 @@ const handleSubmit = (e) => {
   setTimeInput(null);
   setShowModal(false);
 }
-const addTask = (titleInput,statusInput,dateInput,timeInput) => {
+const addTask = (titleInput:any,statusInput:any,dateInput:any,timeInput:any) => {
   let copy = [...items];
   copy = [...copy, { id: items.length + 1, title: (titleInput !=null ? titleInput : "None"), status: (statusInput!=null ? statusInput: "In Progress" ),
    color: (statusInput==="Done" ? "bg-green-400" :statusInput==="In Progress" ? "bg-blue-400" :statusInput==="Paused" ? "bg-yellow-400" : "bg-blue-400" ),
@@ -156,7 +160,7 @@ const addTask = (titleInput,statusInput,dateInput,timeInput) => {
   setItems(copy);
   setcurrentList(copy);
 }
-const handleSave = (e) => {
+const handleSave = (e :React.MouseEvent<HTMLButtonElement>) => {
   e.preventDefault();
   editTask(titleInput,statusInput,dateInput,timeInput,editItem);
   setTitleInput(null);
@@ -165,7 +169,7 @@ const handleSave = (e) => {
   setTimeInput(null);
   closeModal();
 }
-const editTask = (titleInput,statusInput,dateInput,timeInput,editItem) => {
+const editTask = (titleInput:any,statusInput:any,dateInput:any,timeInput:any,editItem:any) => {
   const edited =items.map(el => (el.id === editItem.id ? {...el, 
     title :titleInput, status :statusInput,
     color: (statusInput==="Done" ? "bg-green-400" :statusInput==="In Progress" ? "bg-blue-400" :statusInput==="Paused" ? "bg-yellow-400" : "bg-blue-400" ),
@@ -183,13 +187,13 @@ const editTask = (titleInput,statusInput,dateInput,timeInput,editItem) => {
   setcurrentList(edited);
 }
 
-  const removeItem = itemToBeDeleted => {
+  const removeItem = (itemToBeDeleted:Item) => {
    setItems(items.filter((item) => itemToBeDeleted !== item));
    setcurrentList(currentList.filter((item) => itemToBeDeleted !== item));
   };
   
   useEffect(() => {
-      const items = JSON.parse(localStorage.getItem('items'));
+      const items = JSON.parse(localStorage.getItem('items') ?? "");
       if (items) {
         setItems(items);
       }
@@ -200,7 +204,7 @@ const editTask = (titleInput,statusInput,dateInput,timeInput,editItem) => {
     }, [items]);
 
   useEffect(() => {
-      const currentList = JSON.parse(localStorage.getItem('currentList'));
+      const currentList = JSON.parse(localStorage.getItem('currentList') ?? "");
       if (currentList) {
         setcurrentList(currentList);
       }
@@ -210,7 +214,6 @@ const editTask = (titleInput,statusInput,dateInput,timeInput,editItem) => {
       localStorage.setItem('currentList', JSON.stringify(currentList));
     }, [currentList]);
   
- 
   return (
     <>
       <div className="py-10 px-10 md:py-20 md:px-20">
