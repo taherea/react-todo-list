@@ -46,7 +46,7 @@ function TaskContainer():JSX.Element {
   const [currentFilter, setcurrentFilter] = useState<string>("MONTH");
   const [currentTab, setcurrentTab] = useState<boolean>(false); //to do
   const [currentList, setcurrentList]=useState<Item[]>(items.filter(i => i.date.indexOf(new Date().toLocaleDateString("en-US", { month: 'short' })+ " " + new Date().toLocaleDateString("en-US", { year: 'numeric' }))));//MONTH
-  const [ titleInput, setTitleInput ] = useState<any>(null);
+  const [ titleInput, setTitleInput ] = useState<any>("");
   const [ statusInput, setStatusInput ] = useState<any>(null);
   const [ dateInput, setDateInput ] = useState<any>(null);
   const [ timeInput, setTimeInput ] = useState<any>(null);
@@ -74,7 +74,7 @@ function TaskContainer():JSX.Element {
   }
   
   const closeModal = () => {
-  setTitleInput(null);
+  setTitleInput("");
   setStatusInput(null);
   setDateInput(null);
   setTimeInput(null);
@@ -139,7 +139,7 @@ function TaskContainer():JSX.Element {
 const handleSubmit = (e:React.MouseEvent<HTMLButtonElement>) => {
   e.preventDefault();
   addTask(titleInput,statusInput,dateInput,timeInput);
-  setTitleInput(null);
+  setTitleInput("");
   setStatusInput(null);
   setDateInput(null);
   setTimeInput(null);
@@ -147,7 +147,8 @@ const handleSubmit = (e:React.MouseEvent<HTMLButtonElement>) => {
 }
 const addTask = (titleInput:any,statusInput:any,dateInput:any,timeInput:any) => {
   let copy = [...items];
-  copy = [...copy, { id: items.length + 1, title: (titleInput !=null ? titleInput : "None"), status: (statusInput!=null ? statusInput: "In Progress" ),
+  let maxid = Math.max(...items.map(i=>i.id))
+  copy = [...copy, { id: maxid + 1, title: (titleInput !=="" ? titleInput : "None"), status: (statusInput!=null ? statusInput: "In Progress" ),
    color: (statusInput==="Done" ? "bg-green-400" :statusInput==="In Progress" ? "bg-blue-400" :statusInput==="Paused" ? "bg-yellow-400" : "bg-blue-400" ),
   date:(dateInput!=null ? 
     dateInput.toDate().toLocaleDateString("en-US", { day: '2-digit' })
@@ -156,14 +157,14 @@ const addTask = (titleInput:any,statusInput:any,dateInput:any,timeInput:any) => 
     : new Date().toLocaleDateString("en-US", { day: '2-digit' })
     + " " +  new Date().toLocaleDateString("en-US", { month: 'short' })
     + " " + new Date().toLocaleDateString("en-US", { year: 'numeric' }) ) ,
-  time: (timeInput != null ? timeInput.format('hh:mm a') : "00:00"), isDone: (statusInput==="Done" ? true : false)}];
+  time: (timeInput != null ? timeInput.format('hh:mm a') : "12:00 am"), isDone: (statusInput==="Done" ? true : false)}];
   setItems(copy);
   setcurrentList(copy);
 }
 const handleSave = (e :React.MouseEvent<HTMLButtonElement>) => {
   e.preventDefault();
   editTask(titleInput,statusInput,dateInput,timeInput,editItem);
-  setTitleInput(null);
+  setTitleInput("");
   setStatusInput(null);
   setDateInput(null);
   setTimeInput(null);
@@ -213,7 +214,7 @@ const editTask = (titleInput:any,statusInput:any,dateInput:any,timeInput:any,edi
   useEffect(() => {
       localStorage.setItem('currentList', JSON.stringify(currentList));
     }, [currentList]);
-  
+ 
   return (
     <>
       <div className="py-10 px-10 md:py-20 md:px-20">
